@@ -7,15 +7,9 @@ var router = express.Router();
 var pool = require('../db/db_connector');
 var bcrypt = require('bcrypt-nodejs');
 var auth = require('../auth/authentication');
-const saltRounds = 10;
 
-router.get('*', function (request, response) {
-    response.status(200);
-    response.json({
-        "description": "Recipes REST server API version 1 is no longer supported. Please use API version 2."
-    });
-});
 
+//register a customer
 router.post('/register', function (req, res) {
 
     var email = req.body.email || '';
@@ -65,6 +59,7 @@ router.get('/cities/:id?', function (req, res) {
     });
 });
 
+//every endpoint below, except for /login, needs JWT authorization
 router.all(new RegExp("[^(\/login)]"), function (req, res, next) {
 
     console.log("VALIDATE TOKEN");
@@ -95,7 +90,6 @@ router.post('/login', function (req, res) {
             bcrypt.compare(password,hashPass, function(err, response) {
                 if(response) {
                     res.status(200).json({"token": auth.encodeToken(email)});
-
                 } else {
                     res.status(401).json({"error":"Invalid credentials"});
                 }
@@ -105,6 +99,25 @@ router.post('/login', function (req, res) {
     });
 });
 
-router.get
+//delete existing rental (referred to by customer ID & inventory ID)
+router.delete('/rentals/:customerid/:inventoryid', function (req, res) {
+
+    var customerId = req.params.customerid;
+    var inventoryId = req.params.inventoryid;
+
+    var query = "DELETE FROM rental WHERE customer_id = '" + customerId + "' AND inventory_id = '" + inventoryId + "';";
+
+    pool.getConnection(function (err, connection) {
+        connection.query(query, function (err, rows) {
+            connection.release();
+            if (err) {
+                res.status(400).json({"Rental deletion": "failed"});
+            } else {
+                res.status(200).json(rows);
+                console.log('Rental with customer ID "' + customerId + '" and inventory ID "' + inventoryId + '" has been deleted.');
+            }
+        });
+    });
+});
 
 module.exports = router;
