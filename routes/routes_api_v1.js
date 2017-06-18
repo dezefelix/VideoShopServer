@@ -9,13 +9,6 @@ var bcrypt = require('bcrypt-nodejs');
 var auth = require('../auth/authentication');
 const saltRounds = 10;
 
-router.get('*', function (request, response) {
-    response.status(200);
-    response.json({
-        "description": "Recipes REST server API version 1 is no longer supported. Please use API version 2."
-    });
-});
-
 router.post('/register', function (req, res) {
 
     var email = req.body.email || '';
@@ -42,23 +35,51 @@ router.post('/register', function (req, res) {
     });
 });
 
-//select all films or one city by name
-router.get('/cities/:id?', function (req, res) {
-
-    var cityID = req.params.id || '';
+//Endpoint uit de opdrachtbeschrijving aangepast, werkt anders niet.
+router.get('/films', function (req, res) {
+    var offset = req.query.offset || '';
+    var count = req.query.count || '';
     var query = '';
 
-    if (cityID) {
-        query = 'SELECT * FROM city WHERE ID = "' + cityID + '";'
+    if (offset && count) {
+        query = 'SELECT * FROM film LIMIT '+count+' OFFSET '+offset+';'
+        console.log("1");
+    } else if (count) {
+        query = 'SELECT * FROM film LIMIT '+count+';';
+        console.log("3");
     } else {
-        query = 'SELECT * FROM city';
+        query = 'SELECT * FROM film;';
+        console.log("4");
     }
 
     pool.getConnection(function (err, connection) {
         connection.query(query, function (err, rows, fields) {
             connection.release();
             if (err) {
-                throw err
+                res.status(400).json(({"error":"operation failed, try again"}));
+            }
+            res.status(200).json(rows);
+        });
+    });
+});
+
+//select all films or one city by name
+router.get('/films/:filmid?', function (req, res) {
+
+    var filmID = req.params.filmid || '';
+    var query = '';
+
+    if (filmID) {
+        query = 'SELECT * FROM film WHERE film_id = ' + filmID + ';'
+    } else {
+        query = 'SELECT * FROM film';
+    }
+
+    pool.getConnection(function (err, connection) {
+        connection.query(query, function (err, rows, fields) {
+            connection.release();
+            if (err) {
+                res.status(400).json(({"error":"operation failed, try again"}));
             }
             res.status(200).json(rows);
         });
