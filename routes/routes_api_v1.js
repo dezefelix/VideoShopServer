@@ -36,6 +36,7 @@ router.post('/register', function (req, res) {
 });
 
 //Endpoint uit de opdrachtbeschrijving aangepast, werkt anders niet.
+//select all films with a query, specifying offset and limit.
 router.get('/films', function (req, res) {
     var offset = req.query.offset || '';
     var count = req.query.count || '';
@@ -63,7 +64,7 @@ router.get('/films', function (req, res) {
     });
 });
 
-//select all films or one city by name
+//select all films or one film by name
 router.get('/films/:filmid?', function (req, res) {
 
     var filmID = req.params.filmid || '';
@@ -122,7 +123,6 @@ router.post('/login', function (req, res) {
                     res.status(401).json({"error":"Invalid credentials"});
                 }
             });
-
         });
     });
 });
