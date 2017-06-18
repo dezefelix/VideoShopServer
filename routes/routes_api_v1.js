@@ -99,6 +99,29 @@ router.post('/login', function (req, res) {
     });
 });
 
+//update existing rental (referred to by customer ID & inventory ID)
+router.put('/rentals/:customerid/:inventoryid', function (req, res) {
+
+    var customerId = req.params.customerid;
+    var inventoryId = req.params.inventoryid;
+
+    var query = "UPDATE rental " +
+        "SET return_date = DATE_ADD(NOW(), INTERVAL 2 HOUR) " +
+        "WHERE customer_id = '" + customerId + "' AND inventory_id = '" + inventoryId + "';";
+
+    pool.getConnection(function (err, connection) {
+        connection.query(query, function (err, rows) {
+            connection.release();
+            if (err) {
+                res.status(400).json({"Update rental": "failed"});
+            } else {
+                res.status(200).json({"Update rental": "successful"});
+                console.log('Rental with customer ID "' + customerId + '" and inventory ID "' + inventoryId + '" has been updated.');
+            }
+        });
+    });
+});
+
 //delete existing rental (referred to by customer ID & inventory ID)
 router.delete('/rentals/:customerid/:inventoryid', function (req, res) {
 
@@ -111,9 +134,9 @@ router.delete('/rentals/:customerid/:inventoryid', function (req, res) {
         connection.query(query, function (err, rows) {
             connection.release();
             if (err) {
-                res.status(400).json({"Rental deletion": "failed"});
+                res.status(400).json({"Delete rental": "failed"});
             } else {
-                res.status(200).json(rows);
+                res.status(200).json({"Delete rental": "successful"});
                 console.log('Rental with customer ID "' + customerId + '" and inventory ID "' + inventoryId + '" has been deleted.');
             }
         });
