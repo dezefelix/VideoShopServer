@@ -7,6 +7,7 @@ var router = express.Router();
 var pool = require('../db/db_connector');
 var bcrypt = require('bcrypt-nodejs');
 var auth = require('../auth/authentication');
+var saltRounds = 10;
 
 //register a customer
 router.post('/register', function (req, res) {
@@ -88,7 +89,7 @@ router.get('/films/:filmid?', function (req, res) {
 });
 
 //every endpoint below, except for /login, needs JWT authorization
-router.all(new RegExp("[^(\/login)]"), function (req, res, next) {
+router.all(new RegExp("[^(\/login),(\/register]"), function (req, res, next) {
 
     console.log("VALIDATE TOKEN");
 
