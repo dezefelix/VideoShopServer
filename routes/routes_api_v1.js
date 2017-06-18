@@ -59,7 +59,7 @@ router.get('/films', function (req, res) {
             if (err) {
                 res.status(400).json(({"error":"operation failed, try again"}));
             }
-            res.status(200).json(rows);
+            res.status(200).json({"films": rows});
         });
     });
 });
