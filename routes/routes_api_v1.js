@@ -76,6 +76,7 @@ router.all(new RegExp("[^(\/login)]"), function (req, res, next) {
     });
 });
 
+//login user and return a JWT
 router.post('/login', function (req, res) {
     var email = req.body.email || '';
     var password = req.body.password || '';
@@ -95,6 +96,26 @@ router.post('/login', function (req, res) {
                 }
             });
 
+        });
+    });
+});
+
+//retrieve all rented films from a customer (referred to by customer ID)
+router.get('/rentals/:customerid', function (req, res) {
+
+    var customerId = req.params.customerid;
+
+    var query = "SELECT * FROM rental " +
+        "WHERE customer_id = " + customerId + ";";
+
+    pool.getConnection(function (err, connection) {
+        connection.query(query, function (err, rows) {
+            connection.release();
+            if (err) {
+                res.status(400).json({"Retrieve films": "failed"});
+            } else {
+                res.status(200).json(rows);
+            }
         });
     });
 });
