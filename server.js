@@ -5,8 +5,12 @@ var config = require('./config.json');
 
 var http = require('http');
 var express = require('express');
+var bodyParser = require('body-parser')
 
 var app = express();
+
+app.use(bodyParser.urlencoded({ extended:true }));
+app.use(bodyParser.json());
 
 app.set('PORT', config.webPort);
 var port = app.get('PORT');

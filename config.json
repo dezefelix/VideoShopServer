@@ -1,3 +1,8 @@
 {
-  "webPort":"8080"
+  "secretkey": "VideoShopServerSuperSecretKey-123456789",
+  "dbUsername": "1096",
+  "dbPassword":  "secret",
+  "dbSchema": "1096",
+  "dbServer": "146.185.130.82",
+  "webPort": "8080"
 }
