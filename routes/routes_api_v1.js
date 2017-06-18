@@ -89,7 +89,7 @@ router.get('/films/:filmid?', function (req, res) {
 });
 
 //every endpoint below, except for /login, needs JWT authorization
-router.all(new RegExp("[^(\/login),(\/register]"), function (req, res, next) {
+router.all(new RegExp("[^(\/login)"), function (req, res, next) {
 
     console.log("VALIDATE TOKEN");
 
