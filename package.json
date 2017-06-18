@@ -1,0 +1,30 @@
+{
+  "name": "videoshopserver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dezefelix/VideoShopServer.git"
+  },
+  "author": "felix und jesse",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dezefelix/VideoShopServer/issues"
+  },
+  "homepage": "https://github.com/dezefelix/VideoShopServer#readme",
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "jwt-simple": "^0.5.1",
+    "moment": "^2.18.1",
+    "mysql": "^2.13.0",
+    "node-gyp": "^3.6.2",
+    "nodemon": "^1.11.0"
+  }
+}
