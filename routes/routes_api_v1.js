@@ -112,8 +112,7 @@ router.post('/rentals/:customerid/:inventoryid', function (req, res) {
         connection.query(query, function (err, rows) {
             connection.release();
             if (err) {
-                throw err;
-                // res.status(400).json({"Create rental": "failed"});
+                res.status(400).json({"Create rental": "failed"});
             } else {
                 res.status(200).json({"Create rental": "successful"});
                 console.log('Rental with customer ID "' + customerId + '" and inventory ID "' + inventoryId + '" has been created.');
