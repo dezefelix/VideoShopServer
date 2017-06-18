@@ -7,6 +7,7 @@ var router = express.Router();
 var pool = require('../db/db_connector');
 var bcrypt = require('bcrypt-nodejs');
 var auth = require('../auth/authentication');
+var saltRounds = 10;
 
 //register a customer
 router.post('/register', function (req, res) {
