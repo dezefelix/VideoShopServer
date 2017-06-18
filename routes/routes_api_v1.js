@@ -99,6 +99,29 @@ router.post('/login', function (req, res) {
     });
 });
 
+//create new rental (referred to by customer ID & inventory ID)
+router.post('/rentals/:customerid/:inventoryid', function (req, res) {
+
+    var customerId = req.params.customerid;
+    var inventoryId = req.params.inventoryid;
+
+    var query = "INSERT INTO rental " +
+        "VALUES (NULL, DATE_ADD(NOW(), INTERVAL 2 HOUR), " + inventoryId + ", " + customerId + ", NULL, DATE_ADD(NOW(), INTERVAL 2 HOUR));";
+
+    pool.getConnection(function (err, connection) {
+        connection.query(query, function (err, rows) {
+            connection.release();
+            if (err) {
+                throw err;
+                // res.status(400).json({"Create rental": "failed"});
+            } else {
+                res.status(200).json({"Create rental": "successful"});
+                console.log('Rental with customer ID "' + customerId + '" and inventory ID "' + inventoryId + '" has been created.');
+            }
+        });
+    });
+});
+
 //update existing rental (referred to by customer ID & inventory ID)
 router.put('/rentals/:customerid/:inventoryid', function (req, res) {
 
