@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended:true }));
 app.use(bodyParser.json());
 
 app.set('PORT', config.webPort);
-var port = app.get('PORT');
+var port = process.env.PORT || app.get('PORT');
 
 app.all('*', function(request, response, next) {
     console.log(request.method + " " + request.url);
