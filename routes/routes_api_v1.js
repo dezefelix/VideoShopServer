@@ -167,7 +167,7 @@ router.get('/getcopies/:filmid', function (req, res) {
             if (error) {
                 res.status(400).json({"Retrieve films": "failed"});
             } else {
-                res.status(200).json(rows);
+                res.status(200).json({"copies":rows});
             }
             connection.release();
         });
