@@ -157,6 +157,7 @@ router.get('/rentals/:customerid', function (req, res) {
     });
 });
 
+//retrieve all inventory item (referred to by film ID)
 router.get('/getcopies/:filmid', function (req, res) {
 
     var filmID = req.params.filmid;
