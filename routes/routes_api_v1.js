@@ -136,7 +136,7 @@ router.get('/rentals/:customerid', function (req, res) {
 
     var customerId = req.params.customerid;
 
-    var query = "SELECT rental_id, inventory_id, title, rental_date, customer_id, return_date, rental_duration " +
+    var query = "SELECT rental_id, rental.inventory_id, title, rental_date, customer_id, return_date, rental_duration " +
         "FROM rental " +
         "INNER JOIN inventory " +
         "ON rental.inventory_id = inventory.inventory_id " +
