@@ -26,7 +26,7 @@ router.post('/register', function (req, res) {
                     '("' + firstName + '", "' + lastName + '", "' + email + '", "' + password + '", 0, now(), now());', function (error) {
                     con.release();
                     if (error) {
-                        res.status(400).json({"error":"registration failed"});
+                        res.status(400).json({"error": "registration failed"});
                     } else {
                         res.status(200).json({"registration": "success"});
                     }
@@ -44,10 +44,10 @@ router.get('/films', function (req, res) {
     var query = '';
 
     if (offset && count) {
-        query = 'SELECT * FROM film LIMIT '+count+' OFFSET '+offset+';'
+        query = 'SELECT * FROM film LIMIT ' + count + ' OFFSET ' + offset + ';'
         console.log("1");
     } else if (count) {
-        query = 'SELECT * FROM film LIMIT '+count+';';
+        query = 'SELECT * FROM film LIMIT ' + count + ';';
         console.log("3");
     } else {
         query = 'SELECT * FROM film;';
@@ -58,7 +58,7 @@ router.get('/films', function (req, res) {
         connection.query(query, function (err, rows, fields) {
             connection.release();
             if (err) {
-                res.status(400).json(({"error":"operation failed, try again"}));
+                res.status(400).json(({"error": "operation failed, try again"}));
             }
             res.status(200).json({"films": rows});
         });
@@ -81,7 +81,7 @@ router.get('/films/:filmid?', function (req, res) {
         connection.query(query, function (err, rows, fields) {
             connection.release();
             if (err) {
-                res.status(400).json(({"error":"operation failed, try again"}));
+                res.status(400).json(({"error": "operation failed, try again"}));
             }
             res.status(200).json(rows);
         });
@@ -117,11 +117,11 @@ router.post('/login', function (req, res) {
                 throw err;
             }
             var hashPass = rows[0].password;
-            bcrypt.compare(password,hashPass, function(err, response) {
-                if(response) {
+            bcrypt.compare(password, hashPass, function (err, response) {
+                if (response) {
                     res.status(200).json({"token": auth.encodeToken(email)});
                 } else {
-                    res.status(401).json({"error":"Invalid credentials"});
+                    res.status(401).json({"error": "Invalid credentials"});
                 }
             });
         });
@@ -133,8 +133,13 @@ router.get('/rentals/:customerid', function (req, res) {
 
     var customerId = req.params.customerid;
 
-    var query = "SELECT * FROM rental " +
-        "WHERE customer_id = " + customerId + ";";
+    var query = "SELECT rental_id, title, rental_date, customer_id, return_date, rental_duration " +
+        "FROM rental " +
+        "INNER JOIN inventory " +
+        "ON rental.inventory_id = inventory.inventory_id " +
+        "INNER JOIN film " +
+        "ON film.film_id = inventory.film_id " +
+        "WHERE customer_id = " + customerId;
 
     pool.getConnection(function (err, connection) {
         connection.query(query, function (err, rows) {
