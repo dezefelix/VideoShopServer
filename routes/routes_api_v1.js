@@ -119,7 +119,10 @@ router.post('/login', function (req, res) {
             var hashPass = rows[0].password;
             bcrypt.compare(password, hashPass, function (err, response) {
                 if (response) {
-                    res.status(200).json({"token": auth.encodeToken(email)});
+                    res.status(200).json({
+                        "token": auth.encodeToken(email),
+                        "customerID": rows[0].customer_id
+                    });
                 } else {
                     res.status(401).json({"error": "Invalid credentials"});
                 }
@@ -133,7 +136,7 @@ router.get('/rentals/:customerid', function (req, res) {
 
     var customerId = req.params.customerid;
 
-    var query = "SELECT rental_id, title, rental_date, customer_id, return_date, rental_duration " +
+    var query = "SELECT rental_id, inventory_id, title, rental_date, customer_id, return_date, rental_duration " +
         "FROM rental " +
         "INNER JOIN inventory " +
         "ON rental.inventory_id = inventory.inventory_id " +
@@ -160,7 +163,7 @@ router.get('/getcopies/:filmid', function (req, res) {
     var query = "SELECT COUNT(*) AS Amount FROM rental " +
         "INNER JOIN inventory ON rental.inventory_id = inventory.inventory_id " +
         "INNER JOIN film ON inventory.film_id = film.film_id" +
-        " WHERE rental.active = 0 AND film.film_id = " +filmID+ " ORDER BY rental.inventory_id;";
+        " WHERE rental.active = 0 AND film.film_id = " + filmID + " ORDER BY rental.inventory_id;";
 
     pool.getConnection(function (err, connection) {
         connection.query(query, function (error, rows) {
