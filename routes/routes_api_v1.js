@@ -207,7 +207,8 @@ router.put('/rentals/:customerid/:inventoryid', function (req, res) {
     var inventoryId = req.params.inventoryid;
 
     var query = "UPDATE rental " +
-        "SET return_date = DATE_ADD(NOW(), INTERVAL 2 HOUR) " +
+        "SET return_date = DATE_ADD(NOW(), INTERVAL 2 HOUR), " +
+        "active = 0 " +
         "WHERE customer_id = '" + customerId + "' AND inventory_id = '" + inventoryId + "';";
 
     pool.getConnection(function (err, connection) {
