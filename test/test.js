@@ -35,7 +35,7 @@ describe('Register', function () {
     it('POST /api/v1/register', function (done) {
         chai.request(server)
             .post('/api/v1/register')
-            .send({ email: 'nieuweemail12@gmail.com', password: 'test', firstname: 'Succesvolle', lastname: 'test' })
+            .send({ email: 'nieuweemail13@gmail.com', password: 'test', firstname: 'Succesvolle', lastname: 'test' })
             .set('Content-Type', 'application/json')
             .end(function(err, res){
                 res.should.have.status(200);
