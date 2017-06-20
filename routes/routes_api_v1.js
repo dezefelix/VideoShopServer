@@ -162,10 +162,9 @@ router.get('/getcopies/:filmid', function (req, res) {
 
     var filmID = req.params.filmid;
 
-    var query = "SELECT COUNT(*) AS Amount FROM rental " +
-        "INNER JOIN inventory ON rental.inventory_id = inventory.inventory_id " +
-        "INNER JOIN film ON inventory.film_id = film.film_id" +
-        " WHERE rental.active = 0 AND film.film_id = " + filmID + " ORDER BY rental.inventory_id;";
+    var query = "SELECT inventory_id, film_id, COUNT(inventory_id) AS Amount " +
+    "FROM inventory " +
+    "WHERE film_id = "+ filmID + " AND active = 0;";
 
     pool.getConnection(function (err, connection) {
         connection.query(query, function (error, rows) {
