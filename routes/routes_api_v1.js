@@ -143,12 +143,14 @@ router.get('/rentals/:customerid', function (req, res) {
         "INNER JOIN film " +
         "ON film.film_id = inventory.film_id " +
         "WHERE customer_id = " + customerId +
-        " AND active = 1";
+        " AND rental.active = 1";
 
     pool.getConnection(function (err, connection) {
         connection.query(query, function (err, rows) {
             connection.release();
+            console.log(query);
             if (err) {
+                console.log(err);
                 res.status(400).json({"Retrieve films": "failed"});
             } else {
                 res.status(200).json({"rentals": rows});
