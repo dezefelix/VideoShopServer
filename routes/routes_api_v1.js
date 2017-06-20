@@ -163,8 +163,8 @@ router.get('/getcopies/:filmid', function (req, res) {
     var filmID = req.params.filmid;
 
     var query = "SELECT inventory_id, film_id, COUNT(inventory_id) AS Amount " +
-    "FROM inventory " +
-    "WHERE film_id = "+ filmID + " AND active = 0;";
+        "FROM inventory " +
+        "WHERE film_id = " + filmID + " AND active = 0;";
 
     pool.getConnection(function (err, connection) {
         connection.query(query, function (error, rows) {
@@ -179,13 +179,16 @@ router.get('/getcopies/:filmid', function (req, res) {
 });
 
 //create new rental (referred to by customer ID & inventory ID)
-router.post('/rentals/:customerid/:inventoryid', function (req, res) {
+router.post('/rentals/:customerid/:inventoryid/:filmid', function (req, res) {
 
     var customerId = req.params.customerid;
     var inventoryId = req.params.inventoryid;
+    var filmId = req.params.filmid;
 
     var query = "INSERT INTO rental " +
-        "VALUES (NULL, DATE_ADD(NOW(), INTERVAL 2 HOUR), " + inventoryId + ", " + customerId + ", NULL, DATE_ADD(NOW(), INTERVAL 2 HOUR));";
+        "VALUES (NULL, DATE_ADD(NOW(), INTERVAL 2 HOUR), " + inventoryId + ", " + customerId + ", NULL, DATE_ADD(NOW(), INTERVAL 2 HOUR), 1);" +
+        "INSERT INTO inventory " +
+        "VALUES (null, " + filmId + ", 1, now(), 1);";
 
     pool.getConnection(function (err, connection) {
         connection.query(query, function (err, rows) {
