@@ -179,25 +179,34 @@ router.get('/getcopies/:filmid', function (req, res) {
 });
 
 //create new rental (referred to by customer ID & inventory ID)
-router.post('/rentals/:customerid/:inventoryid/:filmid', function (req, res) {
+router.post('/rentals/:customerid/:inventoryid', function (req, res) {
 
     var customerId = req.params.customerid;
     var inventoryId = req.params.inventoryid;
-    var filmId = req.params.filmid;
 
-    var query = "INSERT INTO rental " +
-        "VALUES (NULL, DATE_ADD(NOW(), INTERVAL 2 HOUR), " + inventoryId + ", " + customerId + ", NULL, DATE_ADD(NOW(), INTERVAL 2 HOUR), 1);" +
-        "INSERT INTO inventory " +
-        "VALUES (null, " + filmId + ", 1, now(), 1);";
+    var query1 = "INSERT INTO rental " +
+        "VALUES (NULL, DATE_ADD(NOW(), INTERVAL 2 HOUR), " + inventoryId + ", " + customerId + ", NULL, DATE_ADD(NOW(), INTERVAL 2 HOUR), 1);";
+    var query2 = "UPDATE inventory " +
+        "SET active = 1 " +
+        "WHERE inventory_id = " + inventoryId + ";";
 
     pool.getConnection(function (err, connection) {
-        connection.query(query, function (err, rows) {
-            connection.release();
+        console.log(query1);
+        connection.query(query1, function (err, rows) {
             if (err) {
-                res.status(400).json({"Create rental": "failed"});
+                console.log(err);
             } else {
-                res.status(200).json({"Create rental": "successful"});
-                console.log('Rental with customer ID "' + customerId + '" and inventory ID "' + inventoryId + '" has been created.');
+                console.log(query2);
+                connection.query(query2, function (err, rows) {
+                    connection.release();
+                    if (err) {
+                        console.log(err);
+                        res.status(400).json({"Create rental": "failed2"});
+                    } else {
+                        res.status(200).json({"Create rental": "successful2"});
+                        console.log('Rental with customer ID "' + customerId + '" and inventory ID "' + inventoryId + '" has been created.');
+                    }
+                });
             }
         });
     });
